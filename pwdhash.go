@@ -8,7 +8,8 @@
 // Note that while alternatives, such as bcrypt and scrypt, do exist, PBKDF2 is
 // considered appropriate and secure for password hashing if used correctly
 // (ie: appropriately high cost factor, secure hashing algorithm, unique salt per password).
-package pwdhash
+//
+package pwdhash // import "github.com/smotes/pwdhash"
 
 import (
 	"bytes"
