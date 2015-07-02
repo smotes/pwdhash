@@ -51,7 +51,7 @@ func Cost(hpwd []byte) (int, error) {
 
 // GenerateFromPassword returns the PBKDF2 hash of the password from the
 // given plaintext password pwd, salt s, number of iterations cost, key length n
-// and name of the hash algorithm a.
+// and name of the hash algorithm alg.
 //
 // The cost is the work factor, or number of iterations. Returns an error if
 // cost < 1, or if cost > 2^31.
@@ -76,7 +76,7 @@ func Cost(hpwd []byte) (int, error) {
 //
 // <algorithm>$<cost>$<salt>$<digest>
 func GenerateFromPassword(pwd, s []byte, cost, n int, alg string) ([]byte, error) {
-	if n < MinCost || n > MaxCost {
+	if cost < MinCost || cost > MaxCost {
 		return nil, ErrInvalidCost(cost)
 	}
 	fn, ok := algorithms[alg]
@@ -144,8 +144,8 @@ func validateHashFormat(hpwd []byte) (alg string, cost int, salt, digest []byte,
 
 	// verify format of string encoded cost
 	cost, err = Cost(hpwd)
-	if err != nil {
-		return "", 0, nil, nil, ErrInvalidHashFormat("invalid cost")
+	if err != nil || cost < MinCost || cost > MaxCost {
+		return "", 0, nil, nil, ErrInvalidCost(cost)
 	}
 
 	// verify format of salt as base64 encoded
