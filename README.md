@@ -22,7 +22,7 @@ package main
 import (
     "crypto/sha512"
 
-    "pwdhash"
+    "github.com/smotes/pwdhash"
 )
 
 func main() {
