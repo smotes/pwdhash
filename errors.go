@@ -19,7 +19,17 @@ func (err ErrInvalidCost) Error() string {
 type ErrInvalidHashFunction string
 
 func (err ErrInvalidHashFunction) Error() string {
-	return fmt.Sprintf("github.com/smotes/phash: hash function %s is not supported/valid", string(err))
+	return fmt.Sprintf("github.com/smotes/phash: hash function %s is not supported/valid",
+		string(err))
+}
+
+// The error returned from CompareHashAndPassword when the provided hashed password hpwd
+// does not have the expected format.
+type ErrInvalidHashFormat string
+
+func (err ErrInvalidHashFormat) Error() string {
+	return fmt.Sprintf("github.com/smotes/phash: hashed password %s is not of the expected format: %s",
+		string(err))
 }
 
 // The error returned from CompareHashAndPassword when the hashed password does not

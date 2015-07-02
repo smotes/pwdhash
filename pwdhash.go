@@ -1,15 +1,4 @@
-// Package pwdhash is a Go package for securely hashing passwords and for
-// checking plaintext password guesses against a hashed password.
-//
-// This package uses the PBKDF2 key derivation algorithm with HMAC variant
-// in combination with a supplied hash function and cryptographically-secure,
-// randomly-generated salt to achieve secure password hashing.
-//
-// Note that while alternatives, such as bcrypt and scrypt, do exist, PBKDF2 is
-// considered appropriate and secure for password hashing if used correctly
-// (ie: appropriately high cost factor, secure hashing algorithm, unique salt per password).
-//
-package pwdhash // import "github.com/smotes/pwdhash"
+package pwdhash
 
 import (
 	"bytes"
@@ -28,19 +17,14 @@ import (
 // The comparison is done using a constant-length comparison algorithm
 // to protect against possible timing attacks.
 func CompareHashAndPassword(hpwd, pwd []byte) error {
-	bs := bytes.Split(hpwd, delim)
-	a := string(bs[algorithmIndex])
-
-	cost, err := Cost(hpwd)
+	alg, cost, salt, digest, err := validateHashFormat(hpwd)
 	if err != nil {
 		return err
 	}
 
-	s := decode(bs[saltIndex])
-	d := decode(bs[digestIndex])
-	n := len(d)
+	n := len(digest)
 
-	guess, err := GenerateFromPassword(pwd, s, cost, n, a)
+	guess, err := GenerateFromPassword(pwd, salt, cost, n, alg)
 	if err != nil {
 		return err
 	}
@@ -91,13 +75,13 @@ func Cost(hpwd []byte) (int, error) {
 // for storage in a database.
 //
 // <algorithm>$<cost>$<salt>$<digest>
-func GenerateFromPassword(pwd, s []byte, cost, n int, a string) ([]byte, error) {
+func GenerateFromPassword(pwd, s []byte, cost, n int, alg string) ([]byte, error) {
 	if n < MinCost || n > MaxCost {
 		return nil, ErrInvalidCost(cost)
 	}
-	fn, ok := algorithms[a]
+	fn, ok := algorithms[alg]
 	if !ok {
-		return nil, ErrInvalidHashFunction(a)
+		return nil, ErrInvalidHashFunction(alg)
 	}
 	d := pbkdf2.Key(pwd, s, cost, n, fn)
 
@@ -106,7 +90,7 @@ func GenerateFromPassword(pwd, s []byte, cost, n int, a string) ([]byte, error) 
 	ds := encode(d)
 
 	return bytes.Join([][]byte{
-		[]byte(a),
+		[]byte(alg),
 		[]byte(cs),
 		ss,
 		ds,
@@ -134,9 +118,47 @@ func encode(b []byte) []byte {
 	return buf
 }
 
-func decode(b []byte) []byte {
+func decode(b []byte) ([]byte, error) {
 	buf := make([]byte, base64.StdEncoding.DecodedLen(len(b)))
-	base64.StdEncoding.Decode(buf, b)
+	_, err := base64.StdEncoding.Decode(buf, b)
+	if err != nil {
+		return nil, err
+	}
 	buf = bytes.TrimRight(buf, null)
-	return buf
+	return buf, nil
+}
+
+func validateHashFormat(hpwd []byte) (alg string, cost int, salt, digest []byte, err error) {
+	// check number of parts in encoded password hash split by delimiter
+	bs := bytes.Split(hpwd, delim)
+	if len(bs) != 4 {
+		return "", 0, nil, nil, ErrInvalidHashFormat("invalid number of parts")
+	}
+
+	// verify algorithm is supported
+	alg = string(bs[algorithmIndex])
+	_, ok := algorithms[alg]
+	if !ok {
+		return "", 0, nil, nil, ErrInvalidHashFunction(alg)
+	}
+
+	// verify format of string encoded cost
+	cost, err = Cost(hpwd)
+	if err != nil {
+		return "", 0, nil, nil, ErrInvalidHashFormat("invalid cost")
+	}
+
+	// verify format of salt as base64 encoded
+	salt, err = decode(bs[saltIndex])
+	if err != nil {
+		return "", 0, nil, nil, ErrInvalidHashFormat("invalid salt encoding")
+	}
+
+	// verify format of digest as base64 encoded
+	digest, err = decode(bs[digestIndex])
+	if err != nil {
+		return "", 0, nil, nil, ErrInvalidHashFormat("invalid digest encoding")
+	}
+
+	return alg, cost, salt, digest, nil
 }
