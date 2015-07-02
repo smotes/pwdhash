@@ -1,4 +1,4 @@
-# pwdhash [![Build Status](https://drone.io/bitbucket.org/stevenmotes/phash/status.png)](https://drone.io/bitbucket.org/stevenmotes/phash/latest) [![GoDoc](https://godoc.org/github.com/smotes/pwdhash?status.svg)](https://godoc.org/github.com/smotes/pwdhash)
+# pwdhash [![Build Status](https://drone.io/github.com/smotes/pwdhash/status.png)](https://drone.io/github.com/smotes/pwdhash/latest) [![GoDoc](https://godoc.org/github.com/smotes/pwdhash?status.svg)](https://godoc.org/github.com/smotes/pwdhash)
 
 ### Overview
 
