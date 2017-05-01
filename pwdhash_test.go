@@ -1,4 +1,4 @@
-package pwdhash
+package pwdhash_test
 
 import (
 	"crypto/md5"
@@ -6,6 +6,8 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"testing"
+
+	"github.com/smotes/pwdhash"
 )
 
 const (
@@ -41,26 +43,25 @@ func TestSha2_512Hash(t *testing.T) {
 }
 
 func common(t *testing.T, n int, a string) {
-	s, err := GenerateSalt(n)
+	s, err := pwdhash.GenerateSalt(n)
 	if err != nil {
 		t.Errorf("Unexpected error from GenerateSalt() using algorithm %s with key size %d: %v", a, n, err)
 	}
 
-	hpwd, err := GenerateFromPassword(pwd, s, iterationCount, n, a)
+	hpwd, err := pwdhash.GenerateFromPassword(pwd, s, iterationCount, n, a)
 	if err != nil {
 		t.Errorf("Unexpected error from GenerateFromPassword() using algorithm %s with key size %d: %v", a, n, err)
 	}
 
-	err = CompareHashAndPassword(hpwd, pwd)
+	err = pwdhash.CompareHashAndPassword(hpwd, pwd)
 	if err != nil {
 		t.Errorf("Unexpected error from CompareHashAndPassword() using algorithm %s with key size %d: %v", a, n, err)
 	}
 
-	cost, err := Cost(hpwd)
+	cost, err := pwdhash.Cost(hpwd)
 	if err != nil {
 		t.Errorf("Unexpected error from Cost() using algorithm %s with key size %d: %v", a, n, err)
-	}
-	if cost != iterationCount {
+	} else if cost != iterationCount {
 		t.Errorf("Unexpected result from Cost() using algorithm %s with key size %d: %v", a, n, err)
 	}
 }
