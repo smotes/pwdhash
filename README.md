@@ -1,4 +1,4 @@
-# pwdhash [![Build Status](https://drone.io/github.com/smotes/pwdhash/status.png)](https://drone.io/github.com/smotes/pwdhash/latest) [![GoDoc](https://godoc.org/github.com/smotes/pwdhash?status.svg)](https://godoc.org/github.com/smotes/pwdhash)
+# pwdhash [![GoDoc](https://godoc.org/github.com/smotes/pwdhash?status.svg)](https://godoc.org/github.com/smotes/pwdhash) [![Build Status](https://travis-ci.org/smotes/pwdhash.svg?branch=master)](https://travis-ci.org/smotes/pwdhash)
 
 ### Overview
 
