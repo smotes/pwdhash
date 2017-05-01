@@ -9,10 +9,11 @@ import (
 	"math"
 )
 
-const (
-	MinCost int = 1             // the minimum allowable cost as passed in to GenerateFromPassword
-	MaxCost int = math.MaxInt32 // the maximum allowable cost as passed in to GenerateFromPassword
-)
+// MinCost is the minimum allowable cost as passed in to GenerateFromPassword.
+const MinCost int = 1
+
+// MaxCost is the maximum allowable cost as passed in to GenerateFromPassword.
+const MaxCost int = math.MaxInt32
 
 const (
 	base    int    = 10
@@ -26,7 +27,7 @@ const (
 )
 
 var (
-	delim []byte = []byte{'$'}
+	delim = []byte("$")
 
 	// supported hash functions
 	algorithms = map[string]func() hash.Hash{

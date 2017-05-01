@@ -1,4 +1,4 @@
-# pwdhash [![GoDoc](https://godoc.org/github.com/smotes/pwdhash?status.svg)](https://godoc.org/github.com/smotes/pwdhash) [![Build Status](https://travis-ci.org/smotes/pwdhash.svg?branch=master)](https://travis-ci.org/smotes/pwdhash)
+# pwdhash [![GoDoc](https://godoc.org/github.com/smotes/pwdhash?status.svg)](https://godoc.org/github.com/smotes/pwdhash) [![Build Status](https://travis-ci.org/smotes/pwdhash.svg?branch=master)](https://travis-ci.org/smotes/pwdhash) [![codecov](https://codecov.io/gh/smotes/pwdhash/branch/master/graph/badge.svg)](https://codecov.io/gh/smotes/pwdhash)
 
 ### Overview
 

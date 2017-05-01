@@ -5,8 +5,7 @@ import (
 	"fmt"
 )
 
-// The error returned from GenerateFromPassword when the provided work factor is
-// outside of the valid range.
+// ErrInvalidCost is returned from the GenerateFromPassword function when the provided work factor is outside of the valid range.
 type ErrInvalidCost int
 
 func (err ErrInvalidCost) Error() string {
@@ -14,8 +13,7 @@ func (err ErrInvalidCost) Error() string {
 		int(err), MinCost, MaxCost)
 }
 
-// The error returned from GenerateFromPassword when the provided hash function is
-// not supported/invalid.
+// ErrInvalidHashFunction is returned from the GenerateFromPassword function when the provided hash function is not supported/invalid.
 type ErrInvalidHashFunction string
 
 func (err ErrInvalidHashFunction) Error() string {
@@ -23,15 +21,13 @@ func (err ErrInvalidHashFunction) Error() string {
 		string(err))
 }
 
-// The error returned from CompareHashAndPassword when the provided hashed password hpwd
-// does not have the expected format.
+// ErrInvalidHashFormat is returned from the CompareHashAndPassword function when the provided hashed password hpwd does not have the expected format.
 type ErrInvalidHashFormat string
 
 func (err ErrInvalidHashFormat) Error() string {
-	return fmt.Sprintf("github.com/smotes/phash: hashed password %s is not of the expected format: %s",
+	return fmt.Sprintf("github.com/smotes/phash: hashed password is not of the expected format: %s",
 		string(err))
 }
 
-// The error returned from CompareHashAndPassword when the hashed password does not
-// match the hash of the given password.
+// ErrMismatchedHashAndPassword is returned from the CompareHashAndPassword function when the hashed password does not match the hash of the given password.
 var ErrMismatchedHashAndPassword = errors.New("github.com/smotes/phash: hashed password is not the hash of the given password")
